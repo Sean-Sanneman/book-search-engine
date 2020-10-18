@@ -1,6 +1,5 @@
 import React from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
-
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { QUERY_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
@@ -14,21 +13,17 @@ const SavedBooks = () => {
 
   const userData = data?.me || {};
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
-    // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
     if (!token) {
       return false;
     }
-
     try {
       const { data } = await removeBook({
         variables: { bookId },
       });
 
-      // upon success, remove book's id from localStorage
+
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
@@ -43,7 +38,7 @@ const SavedBooks = () => {
     <>
       <Jumbotron fluid className='text-light bg-dark'>
         <Container>
-          <h1>Viewing {userData.username}'s books!</h1>
+          <h1>Viewing {userData.username}'s Books!</h1>
         </Container>
       </Jumbotron>
       <Container>
@@ -51,7 +46,7 @@ const SavedBooks = () => {
           {userData.savedBooks?.length
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'
             }:`
-            : 'You have no saved books!'}
+            : 'Your Booklist Is Empty!'}
         </h2>
         <CardColumns>
           {userData.savedBooks?.map((book) => {
@@ -67,7 +62,7 @@ const SavedBooks = () => {
                   <Button
                     className='btn-block btn-danger'
                     onClick={() => handleDeleteBook(book.bookId)}>
-                    Delete this Book!
+                    Remove Book!
                   </Button>
                 </Card.Body>
               </Card>
